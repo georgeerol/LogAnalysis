@@ -63,7 +63,7 @@ The database includes 3 tables:
 
 ## Run
 
-To run the program from vagrant run `python3 report.py` from the command
+To run the program from vagrant run `python reportdb.py` from the command
  line
 
 ## Report Information
