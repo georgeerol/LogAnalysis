@@ -1,8 +1,10 @@
+#!/usr/bin/env python3
+
 import psycopg2
 
 # Question 1
-popular_articles_title = "What are the most popular three articles of all time?"
-popular_articles_query = \
+popular_art_title = "What are the most popular three articles of all time?"
+popular_art_query = \
     (
         "select articles.title, count(*) as views "
         "from articles inner join log on log.path "
@@ -11,8 +13,8 @@ popular_articles_query = \
         "articles.title, log.path order by views desc limit 3")
 
 # Question 2
-popular_authors_title = "Who are the most popular article authors of all time?"
-popular_authors_query = \
+popular_au_title = "Who are the most popular article authors of all time?"
+popular_au_query = \
     (
         "select authors.name, count(*) as views from articles inner "
         "join authors on articles.author = authors.id inner join log "
@@ -24,13 +26,13 @@ popular_authors_query = \
 error_day_title = "On which days did more than 1% of requests lead to errors"
 error_day_query = \
     (
-        "select day, percentage from ("
+        "select day, pc from ("
         "select day, round((sum(requests)/(select count(*) from log where "
         "substring(cast(log.time as text), 0, 11) = day) * 100), 2) as "
-        "percentage from (select substring(cast(log.time as text), 0, 11) as day, "
+        "pc from (select substring(cast(log.time as text), 0, 11) as day, "
         "count(*) as requests from log where status like '%404%' group by day)"
-        "as log_percentage group by day order by percentage desc) as final_query "
-        "where percentage >= 1")
+        "as log_percentage group by day order by pc desc) as final_query "
+        "where pc >= 1")
 
 
 def connect(db_name="news"):
@@ -91,11 +93,11 @@ def print_error_day_info(error_day_query):
 
 if __name__ == '__main__':
     print("\n")
-    popular_articles_info = popular_articles_title, get_query(popular_articles_query)
-    print_query_info(popular_articles_info)
+    popular_art_info = popular_art_title, get_query(popular_art_query)
+    print_query_info(popular_art_info)
     print("\n")
-    popular_authors_info = popular_authors_title, get_query(popular_authors_query)
-    print_query_info(popular_authors_info)
+    popular_au_info = popular_au_title, get_query(popular_au_query)
+    print_query_info(popular_au_info)
     print("\n")
     error_day_info = error_day_title, get_query(error_day_query)
     print_error_day_info(error_day_info)
